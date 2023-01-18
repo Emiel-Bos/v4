@@ -70,7 +70,7 @@ const variables = css`
     --lightest-navy: #ff8811; // Background colour extra elements
     --nav-heading: #628395;
     --green: #ff8811; // Main accent
-    --green-tint: rgba(10, 36, 99, 0.2); // Button overlay
+    --green-tint: rgba(169, 167, 167, 0.2); // Button overlay
     --navy-shadow: rgba(255, 255, 255, 0.9); // Picture & header background shadow
 
     /* Extra pages specific colours*/
