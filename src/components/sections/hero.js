@@ -80,8 +80,8 @@ const Hero = () => {
     </>
   );
   const five = (
-    <a className="email-link" href="https://youtu.be/eHp7QzMJCj8" target="_blank" rel="noreferrer">
-      Haptic robot <br /> teleoperation video
+    <a className="email-link" href={`/pensieve`} target="_blank" rel="noreferrer">
+      Blog posts
     </a>
   );
 
