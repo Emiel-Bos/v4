@@ -47,16 +47,35 @@ The calculated joint angles are then transmitted to an Ubuntu machine using a Tr
 
 ## Networking
 
-By first testing the network and the solution using a cable, the feasibility of 5G was proven in a short time frame.
+One of the key advantages of 5G technology is its ability to provide faster, more reliable, and more efficient wireless connectivity than ever before. This will be particularly important in a teleoperation setting, where the robot will be controlled remotely by a human operator. With 5G, the operator will be able to control the robot wirelessly in real-time, with minimal latency and high-quality video and audio feedback.
+
+To test and benchmark the solution, a cabled network was used to facilitate the teleoperation. The network consisted of an optical fibre between locations whilst CAT 6 Ethernet was used for the computer connections which was limited to 1 Gbps due to the network cards. During testing, the maximum data throughput was measured at 27 Mbps. With the current 5G networking capability supplied by Zeetta networks, the network can have an uplink of 57 Mbps and a downlink of 410 Mbps, indicating that 5G could be integrated within the current solution.
 
 <center>
 
-![Network diagram](./networkrequireddiagram.png)
+![Network diagram](./Networkbandwidth5g.png)
 Network diagram of demonstrator
 
 </center>
 
 ## Future work
 
-- Change inverse kinematics model to ROS based
-- Improve receiver code on robot side for smoother robot movement
+### &#9900; Inverse kinematics
+
+Current inverse kinematics solution uses an available inverse kinematics Asset found in the Unity asset store. This performs adequately within the needs of the research project, however, some concessions had to be made. A 7-DOF robot arm is prone to workspace-interior singularities due to its redundant joint. This generally occurs when two joint axis line up forming an infinite number of solutions. The out-of-the-box inverse kinematics solution used is not able to handle these accordingly and therefore is likely to behave erratically upon arriving at a singularity point.
+
+A way around this would be to integrate ROS into the used solution. We can run ROS within a docker environment effectively simulating the robot and through the new [ROS-TCP-Connector](https://github.com/Unity-Technologies/ROS-TCP-Connector) it is possible to send commands from a ROS Node to Unity. This would result in the visualization relying on a more accurate and realistic model of the robot arm.
+
+### &#9900; TCP receiver side
+
+A very visual issue that the teleoperation system currently has is the "choppy" robot movement. Instead of following the path smoothly similar to as is done virtually the robot moves from point to point. The root-cause of this issue can be found in the TCP receiver code.
+
+On the receiver side of the TCP connection there is a so-called "robot computer" which receives the messages and requests the robot to move accordingly. It was found that the C++ code would request the robot to move and per default give it one second to do so. This means that it does not matter to what degree the robot has to move it will always take one second to perform the movement (unless exceeding rotation speeds). Below is a diagram that further proofs this hypothesis. The time it takes to loop through the C++ code jumps to one second everytime a movement is requested regardless the distance.
+
+<center>
+
+![Network diagram](./JointAngleVsLoopTime3.png)
+
+</center>
+
+The C++ TCP receiver side code was supplemented by the lab and it was considered to be out-of-scope for the 5G project to solve this issue. However, solving it would mean that the robot's movements are more predictable improving the teleoperation system.
